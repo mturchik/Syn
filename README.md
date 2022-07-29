@@ -1,0 +1,2 @@
+# Syn
+Syndication Manager
