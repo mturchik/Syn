@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Radzen;
 using Syn.Areas.Identity;
 using Syn.Data;
 
@@ -17,6 +18,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 // Services
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 //Blazor
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
