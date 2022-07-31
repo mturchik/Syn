@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Radzen;
 using Syn.Areas.Identity;
-using Syn.Data;
+using Syn.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +15,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddScoped<IAppRepository, AppRepository>();
+builder.Services.AddScoped<IAppDataService, AppDataService>();
 // Services
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ICacheService, CacheService>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();

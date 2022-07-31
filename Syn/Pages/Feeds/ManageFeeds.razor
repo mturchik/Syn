@@ -10,7 +10,7 @@
         </span>
     </HeaderTemplate>
     <ChildContent>
-        <EditForm Model="FormModel" OnValidSubmit="SaveFeed" class="container">
+        <EditForm Model="FormModel" OnValidSubmit="CreateFeed" class="container">
             <DataAnnotationsValidator />
             <div class="row">
                 <div class="col-1">
@@ -41,11 +41,15 @@
 </RadzenFieldset>
 
 <RadzenDataGrid Data="FeedSource" TItem="Feed" AllowColumnResize="true" AllowSorting="true"
-                AllowFiltering="true" FilterMode="FilterMode.Simple"
-                LogicalFilterOperator="LogicalFilterOperator.Or" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                AllowFiltering="true" FilterMode="FilterMode.Simple" LogicalFilterOperator="LogicalFilterOperator.Or" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
     <Columns>
-        <RadzenDataGridColumn TItem="Feed" Property="Id" Title="Id" Filterable="false" Frozen="true" Width="70px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Feed" Property="Id" Title="Id" Filterable="false" Frozen="true" Width="70px" TextAlign="TextAlign.Center">
+            <Template Context="F">
+                <RadzenButton Icon="highlight_off" Click="e => DeleteFeed(F)"
+                              ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="Feed" Property="Name" Title="Name" Width="140px" />
         <RadzenDataGridColumn TItem="Feed" Property="Description" Title="Description" Width="140px" />
         <RadzenDataGridColumn TItem="Feed" Property="Uri" Title="Uri" Width="200px" />

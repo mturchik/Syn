@@ -1,6 +1,4 @@
-﻿using Syn.Data.Entities;
-
-namespace Syn.Data;
+﻿namespace Syn.Data;
 
 public class AppRepository : IAppRepository
 {
@@ -11,28 +9,26 @@ public class AppRepository : IAppRepository
         _context = context;
     }
 
-    public IQueryable<Feed> Feeds => _context.Feeds;
-
     #region CRUD
 
-    public ValueTask<T?> Get<T>(int id) where T : BaseEntityWithIntId
-        => _context.Set<T>().FindAsync(id);
+    public IEnumerable<T> Get<T>() where T : BaseEntity
+        => _context.Set<T>().ToList();
 
     public async Task<int> Insert<T>(T entity) where T : BaseEntity
     {
-        await _context.AddAsync(entity);
+        await _context.Set<T>().AddAsync(entity);
         return await _context.SaveChangesAsync();
     }
 
     public async Task<int> Update<T>(T entity) where T : BaseEntity
     {
-        _context.Update(entity);
+        _context.Set<T>().Update(entity);
         return await _context.SaveChangesAsync();
     }
 
     public async Task<int> Delete<T>(T entity) where T : BaseEntity
     {
-        _context.Remove(entity);
+        _context.Set<T>().Remove(entity);
         return await _context.SaveChangesAsync();
     }
 

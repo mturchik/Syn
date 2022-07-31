@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Syn.Data.Entities;
+﻿namespace Syn.Data.Entities;
 
 public abstract class BaseEntityWithIntId : BaseEntity
 {
