@@ -1,6 +1,6 @@
-﻿namespace Syn.Data.Entities;
+﻿namespace Syn.Models;
 
-public class Feed : BaseEntityWithIntId
+public class Feed : BaseModelWithId
 {
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";

@@ -7,15 +7,13 @@
       "connectionId": "Azure:SignalR:ConnectionString",
       "dynamicId": null
     },
-    "mssql1": {
-      "secretStore": "AzureKeyVault",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/syn-server/databases/syn-database",
-      "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:DefaultConnection"
-    },
     "secrets1": {
       "ignored": "true",
       "type": "secrets.keyVault"
+    },
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql"
     }
   }
 }

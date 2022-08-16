@@ -14,8 +14,8 @@ public class CacheService : ICacheService
     public T GetOrCreate<T>(string key, Func<T> factory)
         => _memoryCache.GetOrCreate(key, c =>
         {
-            c.SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
-            c.SetSlidingExpiration(TimeSpan.FromMinutes(5));
+            c.SetAbsoluteExpiration(TimeSpan.FromHours(2));
+            c.SetSlidingExpiration(TimeSpan.FromMinutes(15));
             return factory();
         });
 

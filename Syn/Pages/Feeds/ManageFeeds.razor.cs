@@ -1,39 +1,39 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Syn.Models;
 
 namespace Syn.Pages.Feeds;
 
 public partial class ManageFeeds
 {
-    [Inject] protected IAppDataService AppData { get; set; }
     [Inject] protected NotificationService NotificationService { get; set; }
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; }
 
     protected IEnumerable<Feed> FeedSource = new List<Feed>();
     protected FeedForm FormModel = new();
 
-    protected override void OnInitialized()
-    {
-        FeedSource = AppData.Get<Feed>();
-    }
+    //protected override void OnInitialized()
+    //{
+    //    FeedSource = AppData.Get<Feed>();
+    //}
 
-    protected async Task CreateFeed()
-    {
-        var entity = FormModel.ToEntity();
-        entity.SetCreated((await AuthState)?.User?.Identity?.Name ?? "UserNotFound");
+    //protected async Task CreateFeed()
+    //{
+    //    var entity = FormModel.ToEntity();
+    //    entity.SetCreated((await AuthState)?.User?.Identity?.Name ?? "UserNotFound");
 
-        await AppData.Insert(entity);
+    //    await AppData.Insert(entity);
 
-        FeedSource = AppData.Get<Feed>();
-        FormModel = new();
-        NotificationService.Notify(NotificationSeverity.Success, "Feed Created");
-    }
+    //    FeedSource = AppData.Get<Feed>();
+    //    FormModel = new();
+    //    NotificationService.Notify(NotificationSeverity.Success, "Feed Created");
+    //}
 
-    protected async Task DeleteFeed(Feed feed)
-    {
-        await AppData.Delete(feed);
-        FeedSource = AppData.Get<Feed>();
-        NotificationService.Notify(NotificationSeverity.Warning, "Feed Deleted");
-    }
+    //protected async Task DeleteFeed(Feed feed)
+    //{
+    //    await AppData.Delete(feed);
+    //    FeedSource = AppData.Get<Feed>();
+    //    NotificationService.Notify(NotificationSeverity.Warning, "Feed Deleted");
+    //}
 
     protected class FeedForm
     {
