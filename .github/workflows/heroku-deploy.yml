@@ -3,36 +3,33 @@ name: Heroku Docker Container Deploy
 on:
   push:
     branches: [ "main" ]
-
-env:
-  APPNAME: syndicator-dev
   
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-    
-    - name: Restore dependencies
+        dotnet-version: 7.0.x    
+    - name: Restore
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    
-    -
-      name: Echo
-      run: echo .
       
-    - name: Heroku Docker Container Deploy
-      uses: lucassarcanjo/heroku-deploy@2.1.17
-      with:
-        email: ${{ secrets.HEROKU_EMAIL }}
-        api_key: ${{ secrets.HEROKU_APIKEY }}
-        app_name: ${{ env.APPNAME }}
-        dockerfile_path: '.'
+    - name: Docker Authenticate
+      run: docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+        
+    - name: Docker Build
+      run: docker build . --file Dockerfile
+      
+    - name: Docker Tag
+      run: docker tag synserver:$(date +%s) registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+    - name: Docker Push
+      run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
