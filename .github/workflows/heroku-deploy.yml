@@ -26,10 +26,10 @@ jobs:
       run: docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
         
     - name: Docker Build
-      run: docker build . --file Dockerfile --tag synserver:$(date +%s)
+      run: docker build . --file Dockerfile --tag synserver:main
       
     - name: Docker Tag
-      run: docker tag synserver:$(date +%s) registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+      run: docker tag synserver:main registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
     - name: Docker Push
       run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
