@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  date: $(date +%s)
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,6 +29,6 @@ jobs:
         with:
           file: Server/Dockerfile
           push: true
-          tags: mturchik/synserver:$(date +%s)
+          tags: mturchik/synserver:${{ job.env.date }}
 
 
