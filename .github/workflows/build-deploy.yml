@@ -34,6 +34,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
+    - run: heroku version
+    
+    - run: heroku login -i | printf '${{ secrets.HEROKU_EMAIL }}\n${{ secrets.HEROKU_API_KEY }}\n' 
+    
     - name: Heroku Authenticate
       run: printf '${{ secrets.HEROKU_EMAIL }}\n${{ secrets.HEROKU_API_KEY }}\n' | heroku login -i
      
