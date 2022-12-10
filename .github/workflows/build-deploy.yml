@@ -34,11 +34,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
-    - name: Heroku Authenticate
-      run: set HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }}
-     
     - name: Docker Authenticate
-      run: heroku container:login
+      run: HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:login
      
     - name: Docker Build
       run: docker build . --file Dockerfile --tag synserver:main
@@ -50,4 +47,4 @@ jobs:
       run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
     
     - name: Heroku Release
-      run: heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }} --recursive
+      run: HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }} --recursive
