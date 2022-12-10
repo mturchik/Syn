@@ -47,4 +47,4 @@ jobs:
       run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
     
     - name: Heroku Release
-      run: HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }} --recursive
+      run: HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
