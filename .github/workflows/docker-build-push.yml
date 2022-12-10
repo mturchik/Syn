@@ -26,6 +26,6 @@ jobs:
         with:
           file: Server/Dockerfile
           push: true
-          tags: user/app:latest
+          tags: mturchik/synserver:$(date)
 
 
