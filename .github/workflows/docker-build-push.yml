@@ -26,6 +26,6 @@ jobs:
         with:
           file: Server/Dockerfile
           push: true
-          tags: mturchik/synserver:$(date)
+          tags: mturchik/synserver:$(date +'%Y-%m-%dT%H:%M:%S')
 
 
