@@ -37,7 +37,7 @@ jobs:
     - run: echo ${{ secrets.HEROKU_EMAIL }}
     - run: echo ${{ secrets.HEROKU_API_KEY }}
     - name: Heroku Authenticate
-      run: yes '${{ secrets.HEROKU_EMAIL }}\n${{ secrets.HEROKU_API_KEY }}' | heroku login -i
+      run: yes '${{ secrets.HEROKU_EMAIL }}\n${{ secrets.HEROKU_API_KEY }}\n' | heroku login -i
      
     - name: Docker Authenticate
       run: heroku container:login
