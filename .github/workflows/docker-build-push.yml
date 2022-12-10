@@ -26,6 +26,6 @@ jobs:
         with:
           file: Server/Dockerfile
           push: true
-          tags: mturchik/synserver:${{ github.event.repository.updated_at }}
+          tags: mturchik/synserver:$(date +%s)
 
 
