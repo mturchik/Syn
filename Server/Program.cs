@@ -1,5 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
