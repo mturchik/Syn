@@ -34,9 +34,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
-    - name: Docker Authenticate
-      run: docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
-        
+    #- name: Docker Authenticate
+    #  run: docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+     
+    - name: Heroku Authenticate
+      run: heroku container:login
+     
     - name: Docker Build
       run: docker build . --file Dockerfile --tag synserver:main
       
