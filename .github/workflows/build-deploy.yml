@@ -38,8 +38,7 @@ jobs:
     #  run: docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
      
     - name: Heroku Authenticate
-      run: heroku login -i 
-      #run: heroku login -i | ${{ secrets.HEROKU_EMAIL }} | ${{ secrets.HEROKU_API_KEY }} | heroku container:login
+      run: heroku login -i | ${{ secrets.HEROKU_EMAIL }} | ${{ secrets.HEROKU_API_KEY }} | heroku container:login
      
     - name: Docker Build
       run: docker build . --file Dockerfile --tag synserver:main
