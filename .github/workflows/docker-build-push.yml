@@ -29,6 +29,8 @@ jobs:
         with:
           file: Server/Dockerfile
           push: true
-          tags: mturchik/synserver:${{ job.env.date }}
+          #tags: mturchik/synserver:${{ job.env.date }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
 
