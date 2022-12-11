@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 namespace Syn.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class RssFeedController : ControllerBase
+public class FeedController : ControllerBase
 {
 	[HttpGet("Test")]
 	public IStatusCodeActionResult Test()

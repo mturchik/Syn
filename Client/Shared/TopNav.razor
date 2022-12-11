@@ -1,0 +1,41 @@
+﻿@inject NavigationManager NavManager
+
+<nav class="navbar navbar-expand-md navbar-dark bg-gradient-dark z-index-3 position-sticky w-100">
+	<div class="container">
+		<a class="navbar-brand text-white text-lg" href="">
+			Syn
+		</a>
+		<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navigation"
+				aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon mt-2">
+				<span class="navbar-toggler-bar bar1"></span>
+				<span class="navbar-toggler-bar bar2"></span>
+				<span class="navbar-toggler-bar bar3"></span>
+			</span>
+		</button>
+		<div class="navbar-collapse collapse" id="navigation">
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item">
+					<a class="nav-link link-white" href="">Pages</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link link-white" href="">Things</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+@code {
+	private string Current = "";
+
+	protected override void OnInitialized()
+	{
+		NavManager.LocationChanged += OnLocationChange;
+	}
+
+	private void OnLocationChange(object? sender, LocationChangedEventArgs args)
+	{
+		Current = args.Location;
+	}
+}
