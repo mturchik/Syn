@@ -1,7 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+	.AddNewtonsoftJson(options => { });
 builder.Services.AddRazorPages();
+builder.Services.AddLogging();
 
 var app = builder.Build();
 

@@ -1,5 +1,5 @@
-h1:focus {
-    outline: none;
+* {
+    font-family: Roboto, sans-serif;
 }
 
 #blazor-error-ui {
