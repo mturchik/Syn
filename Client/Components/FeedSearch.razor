@@ -1,12 +1,15 @@
 ﻿@inject IWebApiService _webApi
+@inject IToastService _toast
+@inject ILogger<FeedSearch> _logger
+@inject ISubscriptionService _subService
 
 <div class="card shadow-sm">
 	<div class="card-body">
 		<EditForm Model="this" OnValidSubmit="Search" role="form">
-			<div class="input-group input-group-sm">
+			<div class="input-group">
 				<span id="inp-url-desc" class="input-group-text">Search Feeds By Url</span>
 				<InputText @bind-Value="Url" disabled="@Busy" id="inp-url" class="form-control" aria-describedby="inp-url-desc" />
-				<button disabled="@Busy" class="btn btn-outline-primary" type="submit">Search</button>
+				<button disabled="@Busy" class="btn btn-success" type="submit">Search</button>
 			</div>
 		</EditForm>
 		@if (Feed is not null)
@@ -17,20 +20,24 @@
 					{
 						<img src="@Feed.ImageUrl" class="img-thumbnail float-start me-3" style="max-width: 25%; max-height: 100px;" alt="@Feed.ImageUrl" />
 					}
+					<button class="btn @(IsSubscribed ? "btn-info" : "btn-outline-info") float-end"
+						@onclick="IsSubscribed ? Unsubscribe : Subscribe">
+						@(IsSubscribed ? "Unsubscribe" : "Subscribe")
+					</button>
 					<h4 class="card-title">
 						@Feed.Title
 						<a href="@Feed.Link" target="_blank" class="link-primary">
-							<i class="fa fa-link" />
+							<i class="fa fa-xs fa-link" />
 						</a>
 					</h4>
 					<h5 class="card-subtitle"> @Feed.Description </h5>
-					<small class="card-text">Last Updated: @Feed.LastUpdatedDate?.ToString("g")</small>
+					<small class="card-text">Last Updated: @Feed.LastUpdatedDate?.ToLocalTime().ToString("g")</small>
 				</div>
-				<ul class="list-group list-group-flush">
+				<ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
 					@foreach (var item in Feed.Items)
 					{
 						<li class="list-group-item">
-							<h5>
+							<h5 class="mb-0">
 								<a href="@item.Link" target="_blank" class="link-primary">
 									@item.Title
 									@if (!string.IsNullOrEmpty(item.Author))
@@ -39,15 +46,15 @@
 									}
 								</a>
 							</h5>
+							<small class="text-secondary">Published: @item.PublishingDate?.ToLocalTime().ToString("g") </small>
 							<p class="mb-0 ms-3">
 								@item.Description
-								<div>
-									@foreach (var cat in item.Categories)
-									{
-										<span class="badge bg-info me-2">@cat</span>
-									}
-								</div>
-								<small class="text-secondary">Published: @item.PublishingDate?.ToString("g") </small>
+							</p>
+							<p class="mb-0 ms-3">
+								@foreach (var cat in item.Categories)
+								{
+									<span class="badge bg-info me-2">@cat</span>
+								}
 							</p>
 						</li>
 					}
@@ -61,18 +68,57 @@
 	protected string Url { get; set; } = "";
 	protected bool Busy = false;
 	protected Feed? Feed { get; set; }
+	protected List<FeedSubscription>? Subscriptions { get; set; }
+	protected bool IsSubscribed => Subscriptions?.Any(s => s.Url == Url) ?? false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		Subscriptions = await _subService.GetSubscriptions();
+		_subService.SubscriptionsChanged += UpdateSubscriptions;
+	}
+
+	protected void UpdateSubscriptions(object? sender, List<FeedSubscription> subscriptions)
+	{
+		Subscriptions = subscriptions;
+		StateHasChanged();
+	}
 
 	protected async Task Search()
 	{
 		try
 		{
+			Feed = null;
 			Busy = true;
+			StateHasChanged();
+
 			Feed = await _webApi.Get<Feed>($"api/feeds?url={HttpUtility.UrlEncode(Url)}");
 			Busy = false;
+			if (Feed != null)
+			{
+				_toast.ShowSuccess("Feed Read!");
+				if (Subscriptions?.Any(s => s.Url == Url) ?? false)
+					await _subService.UpsertSubscription(Url, Feed);
+			}
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			throw;
+			Busy = false;
+			_logger.LogError(ex, "Feed Search Failed for {url}", Url);
+			_toast.ShowError("Search Failed");
 		}
+	}
+
+	protected async Task Subscribe()
+	{
+		if (Feed is null) return;
+		await _subService.UpsertSubscription(Url, Feed);
+	}
+
+	protected async Task Unsubscribe()
+	{
+		if (Feed is null) return;
+		await _subService.RemoveSubscription(Url);
 	}
 }

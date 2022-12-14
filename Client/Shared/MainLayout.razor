@@ -1,13 +1,20 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Toast.Configuration
+@inherits LayoutComponentBase
 
-<header style="margin-bottom: 56px;">
+<header>
 	<TopNav />
 </header>
 <main class="p-3 container-fluid">
 	@Body
 </main>
-<footer style="margin-top: 37px;">
-	<div class="fixed-bottom w-100 py-2 bg-primary text-center small">
+<footer>
+	<div class="bg-primary bg-gradient py-1 text-center small fixed-bottom" style="z-index: 999;">
 		<a href="https://getbootstrap.com/docs/5.2" target="_blank" class="link-light">Bootstrap</a>
 	</div>
 </footer>
+
+<BlazoredToasts SuccessIcon="fa fa-sm fa-thumbs-up"
+				IconType="IconType.FontAwesome"
+				Position="ToastPosition.BottomRight"
+				ShowProgressBar="true"
+				RemoveToastsOnNavigation="true" />
