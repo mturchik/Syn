@@ -4,12 +4,7 @@
 	<div class="card-body">
 		@foreach (var sub in Subscriptions)
 		{
-			<div class="card shadow-sm mt-2">
-				<div class="card-body">
-					<h4 class="card-title"> @sub.Url </h4>
-					<h5 class="card-subtitle"> @sub.CreatedAt?.ToLocalTime().ToString("g") </h5>
-				</div>
-			</div>
+			<FeedTile Subscription="sub" />
 		}
 	</div>
 </div>

@@ -14,52 +14,7 @@
 		</EditForm>
 		@if (Feed is not null)
 		{
-			<div class="card shadow-sm mt-2">
-				<div class="card-header">
-					@if (!string.IsNullOrEmpty(Feed.ImageUrl))
-					{
-						<img src="@Feed.ImageUrl" class="img-thumbnail float-start me-3" style="max-width: 25%; max-height: 100px;" alt="@Feed.ImageUrl" />
-					}
-					<button class="btn @(IsSubscribed ? "btn-info" : "btn-outline-info") float-end"
-						@onclick="IsSubscribed ? Unsubscribe : Subscribe">
-						@(IsSubscribed ? "Unsubscribe" : "Subscribe")
-					</button>
-					<h4 class="card-title">
-						@Feed.Title
-						<a href="@Feed.Link" target="_blank" class="link-primary">
-							<i class="fa fa-xs fa-link" />
-						</a>
-					</h4>
-					<h5 class="card-subtitle"> @Feed.Description </h5>
-					<small class="card-text">Last Updated: @Feed.LastUpdatedDate?.ToLocalTime().ToString("g")</small>
-				</div>
-				<ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
-					@foreach (var item in Feed.Items)
-					{
-						<li class="list-group-item">
-							<h5 class="mb-0">
-								<a href="@item.Link" target="_blank" class="link-primary">
-									@item.Title
-									@if (!string.IsNullOrEmpty(item.Author))
-									{
-										<small class="text-secondary">by @item.Author</small>
-									}
-								</a>
-							</h5>
-							<small class="text-secondary">Published: @item.PublishingDate?.ToLocalTime().ToString("g") </small>
-							<p class="mb-0 ms-3">
-								@item.Description
-							</p>
-							<p class="mb-0 ms-3">
-								@foreach (var cat in item.Categories)
-								{
-									<span class="badge bg-info me-2">@cat</span>
-								}
-							</p>
-						</li>
-					}
-				</ul>
-			</div>
+			<FeedTile Feed="Feed" Subscription="Subscriptions.FirstOrDefault(s => s.Url == Feed.Url)" Subscribe="Subscribe" Unsubscribe="Unsubscribe" />
 		}
 	</div>
 </div>
@@ -68,14 +23,13 @@
 	protected string Url { get; set; } = "";
 	protected bool Busy = false;
 	protected Feed? Feed { get; set; }
-	protected List<FeedSubscription>? Subscriptions { get; set; }
-	protected bool IsSubscribed => Subscriptions?.Any(s => s.Url == Url) ?? false;
+	protected List<FeedSubscription> Subscriptions { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
 
-		Subscriptions = await _subService.GetSubscriptions();
+		Subscriptions = await _subService.GetSubscriptions() ?? new();
 		_subService.SubscriptionsChanged += UpdateSubscriptions;
 	}
 
@@ -95,12 +49,6 @@
 
 			Feed = await _webApi.Get<Feed>($"api/feeds?url={HttpUtility.UrlEncode(Url)}");
 			Busy = false;
-			if (Feed != null)
-			{
-				_toast.ShowSuccess("Feed Read!");
-				if (Subscriptions?.Any(s => s.Url == Url) ?? false)
-					await _subService.UpsertSubscription(Url, Feed);
-			}
 		}
 		catch (Exception ex)
 		{
@@ -113,12 +61,12 @@
 	protected async Task Subscribe()
 	{
 		if (Feed is null) return;
-		await _subService.UpsertSubscription(Url, Feed);
+		await _subService.AddSubscription(Feed);
 	}
 
 	protected async Task Unsubscribe()
 	{
 		if (Feed is null) return;
-		await _subService.RemoveSubscription(Url);
+		await _subService.RemoveSubscription(Feed);
 	}
 }

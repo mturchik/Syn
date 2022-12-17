@@ -1,0 +1,85 @@
+﻿@inject IClipboard _clipboard
+@inject IToastService _toast
+
+<div class="card shadow-sm mt-2">
+	<div class="card-header">
+		@if (!string.IsNullOrEmpty(ImageUrl))
+		{
+			<img src="@ImageUrl" class="img-thumbnail float-start me-3" style="max-width: 25%; max-height: 100px;" alt="@ImageUrl" />
+		}
+		<button class="btn @(IsSubscribed ? "btn-info" : "btn-outline-info") float-end"
+				@onclick="IsSubscribed ? Unsubscribe : Subscribe">
+			@(IsSubscribed ? "Unsubscribe" : "Subscribe")
+		</button>
+		<h4 class="card-title">
+			@Title
+			<a href="@Link" target="_blank" class="link-primary small">
+				<i class="fa fa-2xs fa-external-link" />
+			</a>
+		</h4>
+		<h5 class="card-subtitle"> @Description </h5>
+		<small class="card-text">
+			Feed Url:
+			<a @onclick="CopyUrl" class="link-primary" style="cursor: pointer;" title="Copy To Clipboard">
+				<i class="fa fa-xs fa-clipboard" />
+				@Url
+			</a>
+		</small>
+		<br />
+		@if (Feed is not null)
+		{
+			<small class="card-text">Last Updated: @Feed.LastUpdatedDate?.ToLocalTime().ToString("g")</small>
+		}
+	</div>
+	@if (Feed is not null)
+	{
+		<ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
+			@foreach (var item in Feed.Items)
+			{
+				<li class="list-group-item">
+					<h5 class="mb-0">
+						<a href="@item.Link" target="_blank" class="link-primary">
+							@item.Title
+							@if (!string.IsNullOrEmpty(item.Author))
+							{
+								<small class="text-secondary">by @item.Author</small>
+							}
+						</a>
+					</h5>
+					<small class="text-secondary">Published: @item.PublishingDate?.ToLocalTime().ToString("g") </small>
+					<p class="mb-0 ms-3" style="max-height: 6em; overflow-y: auto;">
+						@item.Description
+					</p>
+					<p class="mb-0 ms-3">
+						@foreach (var cat in item.Categories)
+						{
+							<span class="badge bg-info me-2">@cat</span>
+						}
+					</p>
+				</li>
+			}
+		</ul>
+	}
+</div>
+
+@code {
+	[Parameter] public Feed? Feed { get; set; }
+	[Parameter] public FeedSubscription? Subscription { get; set; }
+	[Parameter] public EventCallback<MouseEventArgs> Subscribe { get; set; }
+	[Parameter] public EventCallback<MouseEventArgs> Unsubscribe { get; set; }
+
+	protected bool IsSubscribed => Subscription != null;
+	protected string? Title => Feed?.Title ?? Subscription?.Title;
+	protected string? Link => Feed?.Link ?? Subscription?.Link;
+	protected string? Description => Feed?.Description ?? Subscription?.Description;
+	protected string? ImageUrl => Feed?.ImageUrl ?? Subscription?.ImageUrl;
+	protected string? Url => Feed?.Url ?? Subscription?.Url;
+
+	protected async Task CopyUrl()
+	{
+		if (string.IsNullOrEmpty(Url)) return;
+
+		await _clipboard.SetTextAsync(Url);
+		_toast.ShowInfo($"Copied {Url}");
+	}
+}

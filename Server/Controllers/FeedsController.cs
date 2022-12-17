@@ -19,6 +19,6 @@ public class FeedsController : ControllerBase
 	{
 		_logger.LogInformation("Feed read requested for {url}", url);
 		var codeHollowFeed = await FeedReader.ReadAsync(url);
-		return codeHollowFeed is null ? NotFound() : Ok(new Feed(codeHollowFeed));
+		return codeHollowFeed is null ? NotFound() : Ok(new Feed(url, codeHollowFeed));
 	}
 }

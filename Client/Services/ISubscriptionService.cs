@@ -5,6 +5,6 @@ public interface ISubscriptionService
 {
 	event EventHandler<List<FeedSubscription>>? SubscriptionsChanged;
 	ValueTask<List<FeedSubscription>> GetSubscriptions();
-	Task UpsertSubscription(string url, Feed feed);
-	Task RemoveSubscription(string url);
+	Task AddSubscription(Feed feed);
+	Task RemoveSubscription(Feed feed);
 }

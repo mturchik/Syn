@@ -10,10 +10,10 @@
 		<div class="navbar-collapse collapse" id="navigation">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="">Pages</a>
+					<a class="nav-link @ActiveClass("/")" href="">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Things</a>
+					<a class="nav-link @ActiveClass("Subscriptions")" href="Subscriptions">Subscriptions</a>
 				</li>
 			</ul>
 		</div>
@@ -31,5 +31,8 @@
 	private void OnLocationChange(object? sender, LocationChangedEventArgs args)
 	{
 		Current = args.Location;
+		StateHasChanged();
 	}
+
+	private string ActiveClass(string route) => Current.EndsWith(route) ? "active" : "";
 }

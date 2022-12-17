@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Syn.Client;
 using Syn.Client.Services;
+using TextCopy;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -14,9 +15,9 @@ builder.Services.AddHttpClient("Syn.ServerAPI", client => client.BaseAddress = n
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredToast();
+builder.Services.InjectClipboard();
 // Custom Services
 builder.Services.AddScoped<IWebApiService, WebApiService>();
-builder.Services.AddScoped<ILocalService, LocalService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
 await builder.Build().RunAsync();

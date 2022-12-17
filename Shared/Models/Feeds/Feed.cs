@@ -1,6 +1,7 @@
 ﻿namespace Syn.Shared.Models.Feeds;
 public class Feed
 {
+	public string? Url { get; set; }
 	public string? Title { get; set; }
 	public string? Link { get; set; }
 	public string? Description { get; set; }
@@ -13,8 +14,9 @@ public class Feed
 
 	public Feed() { }
 
-	public Feed(CodeHollow.FeedReader.Feed codeHollowFeed)
+	public Feed(string url, CodeHollow.FeedReader.Feed codeHollowFeed)
 	{
+		Url = url;
 		Title = codeHollowFeed.Title;
 		Link = codeHollowFeed.Link;
 		Description = codeHollowFeed.Description;
